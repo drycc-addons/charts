@@ -44,8 +44,7 @@ Common fields include:
 - `providerConfigRef` - Crossplane Helm provider config name
 - `displayName` - addon class display name
 - `kind` / `plural` - composite kind naming
-- `appVersions` - supported application versions
-- `plans` - class plans and parameters
+- `plans` - class plans with enforcedValues and createDefaults
 
 ## Deployment Order
 

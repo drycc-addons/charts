@@ -1,17 +1,18 @@
 kind: Valkey
 plural: valkey
 description: "Valkey high-performance in-memory data structure store"
-appVersions: ["0.1.0"]
 
-registry: oci://registry.drycc.cc/charts
+registry: oci://registry.drycc.cc/drycc-addons/charts
 chart: valkey
-chartVersion: "0.1.0"
+chartVersion: "1.0.0"
 providerConfigRef: drycc-addons
 
 plans:
 - name: "standard-256"
   description: "0.1 vCPU / 256 MB RAM / Storage minimum: 1 GiB"
-  presetParameters:
+  enforcedValues:
+    shards: 1
+    replicas: 2
     workloadType: StatefulSet
     resources:
       limits:
@@ -27,30 +28,21 @@ plans:
       reclaimPolicy: Retain
     exporter:
       enabled: true
-  defaultParameters:
-    imagePullPolicy: "IfNotPresent"
-    shards: 1
-    replicas: 2
+  createDefaults: {}
   allowCreatePathFields:
-  - "imagePullPolicy"
-  - "shards"
-  - "replicas"
+  - "users"
   - "config"
   - "tls.enabled"
-  - "users"
-  - "nodeSelector"
-  - "exporter.enabled"
   allowUpdatePathFields:
-  - "replicas"
+  - "users"
   - "config"
   - "tls.enabled"
-  - "users"
-  - "nodeSelector"
-  - "exporter.enabled"
 
 - name: "standard-1024"
   description: "0.5 vCPU / 1 GB RAM / Storage minimum: 8 GiB"
-  presetParameters:
+  enforcedValues:
+    shards: 1
+    replicas: 2
     workloadType: StatefulSet
     resources:
       limits:
@@ -66,23 +58,12 @@ plans:
       reclaimPolicy: Retain
     exporter:
       enabled: true
-  defaultParameters:
-    imagePullPolicy: "IfNotPresent"
-    shards: 3
-    replicas: 2
+  createDefaults: {}
   allowCreatePathFields:
-  - "imagePullPolicy"
-  - "shards"
-  - "replicas"
+  - "users"
   - "config"
   - "tls.enabled"
-  - "users"
-  - "nodeSelector"
-  - "exporter.enabled"
   allowUpdatePathFields:
-  - "replicas"
+  - "users"
   - "config"
   - "tls.enabled"
-  - "users"
-  - "nodeSelector"
-  - "exporter.enabled"

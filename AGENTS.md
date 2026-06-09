@@ -47,14 +47,13 @@ classes/files/<name>.yaml
   kind: <Kind>
   plural: <plural>
   description: "<human-readable>"
-  appVersions: ["<app-version>"]
   chart: <name>
   chartVersion: "<version>"
   providerConfigRef: drycc-addons
   plans:
     - name: "<plan-name>"
-      presetParameters:     # platform-enforced (resources, persistence, workloadType)
-      defaultParameters:    # create-only defaults (shards, replicas, imagePullPolicy)
+      enforcedValues:   # platform-enforced (resources, persistence, workloadType)
+      createDefaults:   # create-only defaults (shards, replicas, imagePullPolicy)
       allowCreatePathFields:
       allowUpdatePathFields:
 ```

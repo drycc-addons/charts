@@ -30,12 +30,6 @@ spec:
                   type: string
                   minLength: 1
                   maxLength: 128
-                appVersions:
-                  type: array
-                  minItems: 1
-                  items:
-                    type: string
-                    pattern: "^[0-9]+(\\.[0-9]+)*$"
                 targetResource:
                   type: object
                   required: [apiVersion, kind]
@@ -57,8 +51,8 @@ spec:
                     required:
                       - name
                       - displayName
-                      - presetParameters
-                      - defaultParameters
+                      - enforcedValues
+                      - createDefaults
                       - allowCreatePathFields
                       - allowUpdatePathFields
                     properties:
@@ -70,10 +64,10 @@ spec:
                         type: string
                         minLength: 1
                         maxLength: 128
-                      presetParameters:
+                      enforcedValues:
                         type: object
                         x-kubernetes-preserve-unknown-fields: true
-                      defaultParameters:
+                      createDefaults:
                         type: object
                         x-kubernetes-preserve-unknown-fields: true
                       allowCreatePathFields:

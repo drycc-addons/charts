@@ -8,7 +8,7 @@
 ##
 ## Top-level keys below map 1:1 to ValkeyCluster .spec.* fields. When provisioned
 ## through the drycc addons control plane (Crossplane), these values are supplied
-## via spec.parameters and merged with the plan presetParameters.
+## via spec.parameters and merged with the plan enforcedValues.
 
 ## @param imagePullPolicy Image pull policy (Always, IfNotPresent, Never)
 ##

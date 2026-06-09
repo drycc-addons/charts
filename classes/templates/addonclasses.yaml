@@ -15,10 +15,6 @@ metadata:
 spec:
   description: {{ $values.description | quote }}
   displayName: {{ default $values.description $values.displayName | quote }}
-  appVersions:
-{{- range $values.appVersions }}
-    - {{ . | quote }}
-{{- end }}
   targetResource:
     apiVersion: addons.drycc.cc/v1
     kind: {{ $values.kind }}
@@ -26,10 +22,10 @@ spec:
 {{- range $values.plans }}
     - name: {{ .name | quote }}
       displayName: {{ default .description .displayName | quote }}
-      presetParameters:
-{{ .presetParameters | toYaml | indent 8 }}
-      defaultParameters:
-{{ .defaultParameters | toYaml | indent 8 }}
+      enforcedValues:
+{{ .enforcedValues | toYaml | indent 8 }}
+      createDefaults:
+{{ .createDefaults | toYaml | indent 8 }}
       allowCreatePathFields:
 {{ .allowCreatePathFields | toYaml | indent 8 }}
       allowUpdatePathFields:
