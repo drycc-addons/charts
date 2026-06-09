@@ -1,0 +1,30 @@
+apiVersion: addons.drycc.cc/v1
+kind: Redis
+metadata:
+  name: test-redis
+  namespace: default
+spec:
+  parameters:
+    master:
+      persistence:
+        enabled: true
+        size: 1Gi
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 50m
+          memory: 64Mi
+    replica:
+      replicaCount: 1
+      persistence:
+        enabled: true
+        size: 1Gi
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 50m
+          memory: 64Mi

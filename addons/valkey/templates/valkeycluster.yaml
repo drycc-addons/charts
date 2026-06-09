@@ -1,0 +1,46 @@
+apiVersion: valkey.io/v1alpha1
+kind: ValkeyCluster
+metadata:
+  name: {{ include "valkey.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "valkey.labels" . | nindent 4 }}
+spec:
+  shards: {{ .Values.shards }}
+  replicas: {{ .Values.replicas }}
+  workloadType: {{ .Values.workloadType }}
+  {{- with .Values.config }}
+  config:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if .Values.persistence.enabled }}
+  persistence:
+    size: {{ .Values.persistence.size }}
+    reclaimPolicy: {{ .Values.persistence.reclaimPolicy }}
+    {{- with .Values.persistence.storageClassName }}
+    storageClassName: {{ . | quote }}
+    {{- end }}
+  {{- end }}
+  {{- with .Values.resources }}
+  resources:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  exporter:
+    enabled: {{ .Values.exporter.enabled }}
+    {{- with .Values.exporter.resources }}
+    resources:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  {{- if .Values.tls.enabled }}
+  tls:
+    certificate:
+      secretName: {{ include "valkey.tlsSecretName" . | quote }}
+  {{- end }}
+  {{- with .Values.users }}
+  users:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.nodeSelector }}
+  nodeSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}

@@ -1,0 +1,19 @@
+annotations:
+  category: Database
+apiVersion: v2
+description: Valkey is an open source, high performance, in-memory data structure store. This chart renders a single ValkeyCluster custom resource that is reconciled by the cluster-scoped Valkey Operator.
+home: https://valkey.io
+icon: https://valkey.io/img/Valkey-Logo-symbol_TwitchPurple.svg
+keywords:
+  - valkey
+  - keyvalue
+  - database
+  - cache
+maintainers:
+  - email: dev@drycc.io
+    name: drycc
+name: valkey
+sources:
+  - https://github.com/valkey-io/valkey-helm
+version: "0.1.0"
+appVersion: "v0.1.0"

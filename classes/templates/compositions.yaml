@@ -1,0 +1,66 @@
+{{- range $path, $_ := .Files.Glob "files/*.yaml" }}
+{{- $values := $.Files.Get $path | fromYaml }}
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: {{ $path | base | trimSuffix ".yaml" }}.addons.drycc.cc
+  labels:
+    app.kubernetes.io/name: {{ $path | base | trimSuffix ".yaml" }}
+    app.kubernetes.io/component: crossplane-composition
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "2"
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  mode: Pipeline
+  compositeTypeRef:
+    apiVersion: addons.drycc.cc/v1
+    kind: {{ $values.kind }}
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: helm-release
+            base:
+              apiVersion: helm.m.crossplane.io/v1beta1
+              kind: Release
+              spec:
+                rollbackLimit: 3
+                forProvider:
+                  chart:
+                    name: {{ $values.chart }}
+                    repository: {{ $values.registry | quote }}
+                    version: {{ $values.chartVersion | quote }}
+                providerConfigRef:
+                  kind: ClusterProviderConfig
+                  name: {{ $values.providerConfigRef }}
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: metadata.namespace
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: spec.forProvider.namespace
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: metadata.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.labels
+                toFieldPath: metadata.labels
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters
+                toFieldPath: spec.forProvider.values
+              - type: ToCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: status.connectionSecretName
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-connection"
+{{- end }}

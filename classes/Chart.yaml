@@ -1,0 +1,8 @@
+apiVersion: v2
+name: catalog
+description: Crossplane addon class - XRD, Composition, and AddonClass definitions
+type: application
+version: 0.1.0
+maintainers:
+  - name: drycc
+    email: dev@drycc.io

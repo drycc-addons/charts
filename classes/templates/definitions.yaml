@@ -1,0 +1,42 @@
+{{- range $path, $_ := .Files.Glob "files/*.yaml" }}
+{{- $values := $.Files.Get $path | fromYaml }}
+---
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: {{ $values.plural }}.addons.drycc.cc
+  labels:
+    app.kubernetes.io/name: {{ $path | base | trimSuffix ".yaml" }}
+    app.kubernetes.io/component: crossplane-xrd
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "1"
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  group: addons.drycc.cc
+  scope: Namespaced
+  names:
+    kind: {{ $values.kind }}
+    plural: {{ $values.plural }}
+  versions:
+    - name: v1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required: [parameters]
+              properties:
+                parameters:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+            status:
+              type: object
+              properties:
+                connectionSecretName:
+                  type: string
+                  description: Name of the connection secret
+{{- end }}

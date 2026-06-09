@@ -1,0 +1,94 @@
+## Valkey addon instance chart values.
+##
+## This chart renders a single ValkeyCluster custom resource (valkey.io/v1alpha1)
+## which is reconciled by the cluster-scoped Valkey Operator. The operator and its
+## CRDs (valkeyclusters.valkey.io, valkeynodes.valkey.io) must be installed
+## cluster-wide BEFORE this chart is deployed. This chart does NOT bundle the
+## operator or its CRDs.
+##
+## Top-level keys below map 1:1 to ValkeyCluster .spec.* fields. When provisioned
+## through the drycc addons control plane (Crossplane), these values are supplied
+## via spec.parameters and merged with the plan presetParameters.
+
+## @param imagePullPolicy Image pull policy (Always, IfNotPresent, Never)
+##
+imagePullPolicy: IfNotPresent
+
+## ValkeyCluster topology
+## @param shards Number of shard groups. Each shard group contains one primary and N replicas. Minimum 1.
+## @param replicas Number of replicas for each shard group. Minimum 0.
+##
+shards: 1
+replicas: 2
+
+## @param workloadType Whether ValkeyNodes create StatefulSets or Deployments. One of: StatefulSet, Deployment. Immutable after creation.
+##
+workloadType: StatefulSet
+
+## @param config Additional Valkey configuration parameters (map of string to string)
+## Example:
+##   config:
+##     maxmemory-policy: allkeys-lru
+##
+config: {}
+
+## Persistence for durable storage. Only valid when workloadType is StatefulSet.
+## Once set it cannot be removed; size may only be expanded; storageClassName is immutable.
+## @param persistence.enabled Whether to render the persistence block on the ValkeyCluster
+## @param persistence.size Requested PVC size
+## @param persistence.storageClassName StorageClass for the PVC (empty uses the cluster default)
+## @param persistence.reclaimPolicy Whether the managed PVC is retained or deleted when the node is deleted. One of: Retain, Delete.
+##
+persistence:
+  enabled: true
+  size: 1Gi
+  storageClassName: ""
+  reclaimPolicy: Retain
+
+## @param resources Resource requirements for the Valkey container in each pod
+## Example:
+##   resources:
+##     limits:
+##       cpu: 500m
+##       memory: 512Mi
+##     requests:
+##       cpu: 250m
+##       memory: 256Mi
+##
+resources: {}
+
+## Metrics exporter sidecar.
+## @param exporter.enabled Enable or disable the exporter sidecar container
+## @param exporter.resources Resource requirements for the exporter container
+##
+exporter:
+  enabled: true
+  resources: {}
+
+## TLS configuration. Disabled by default.
+## When enabled, this chart generates a self-signed CA and certificate and creates a
+## kubernetes.io/tls secret named "<release-name>-valkey-tls" (namespace scoped). The
+## ValkeyCluster resource always references that fixed secret name; it is not configurable.
+## On helm upgrade an existing secret is preserved (lookup) so certificates remain stable.
+## @param tls.enabled Enable TLS. The operator runs the cluster TLS-only (sets port 0), so plaintext clients cannot connect.
+## @param tls.certValidityDays Validity period in days for the generated CA and certificate
+##
+tls:
+  enabled: false
+  certValidityDays: 36500
+
+## @param users ACL users configuration. Array of user ACL specs (name, enabled, nopass, keys, commands, channels).
+## Example:
+##   users:
+##     - name: app
+##       enabled: true
+##       keys:
+##         readWrite: ["*"]
+##       commands:
+##         allow: ["@all"]
+##
+users: []
+
+## @param nodeSelector NodeSelector to apply to the pods
+##
+nodeSelector: {}
