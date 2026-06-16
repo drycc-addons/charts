@@ -8,22 +8,22 @@ chartVersion: "1.0.0"
 providerConfigRef: drycc-addons
 
 plans:
-- name: "standard-256"
-  description: "0.1 vCPU / 256 MB RAM / Storage minimum: 1 GiB"
+- name: "micro"
+  description: "1 GB per node, Standalone"
   enforcedValues:
     shards: 1
-    replicas: 2
+    replicas: 0
     workloadType: StatefulSet
     resources:
       limits:
-        cpu: 100m
-        memory: 256Mi
+        cpu: 500m
+        memory: 1Gi
       requests:
-        cpu: 50m
-        memory: 128Mi
+        cpu: 250m
+        memory: 512Mi
     persistence:
       enabled: true
-      size: 1Gi
+      size: 2Gi
       storageClassName: ""
       reclaimPolicy: Retain
     exporter:
@@ -38,22 +38,142 @@ plans:
   - "config"
   - "tls.enabled"
 
-- name: "standard-1024"
-  description: "0.5 vCPU / 1 GB RAM / Storage minimum: 8 GiB"
+- name: "small"
+  description: "2 GB per node, 1 Master + 1 Replica"
   enforcedValues:
     shards: 1
-    replicas: 2
+    replicas: 1
     workloadType: StatefulSet
     resources:
       limits:
         cpu: 500m
-        memory: 1Gi
+        memory: 2Gi
       requests:
         cpu: 250m
-        memory: 512Mi
+        memory: 1Gi
+    persistence:
+      enabled: true
+      size: 4Gi
+      storageClassName: ""
+      reclaimPolicy: Retain
+    exporter:
+      enabled: true
+  createDefaults: {}
+  allowCreatePathFields:
+  - "users"
+  - "config"
+  - "tls.enabled"
+  allowUpdatePathFields:
+  - "users"
+  - "config"
+  - "tls.enabled"
+
+- name: "medium"
+  description: "4 GB per node, 1 Master + 1 Replica"
+  enforcedValues:
+    shards: 1
+    replicas: 1
+    workloadType: StatefulSet
+    resources:
+      limits:
+        cpu: 1
+        memory: 4Gi
+      requests:
+        cpu: 500m
+        memory: 2Gi
     persistence:
       enabled: true
       size: 8Gi
+      storageClassName: ""
+      reclaimPolicy: Retain
+    exporter:
+      enabled: true
+  createDefaults: {}
+  allowCreatePathFields:
+  - "users"
+  - "config"
+  - "tls.enabled"
+  allowUpdatePathFields:
+  - "users"
+  - "config"
+  - "tls.enabled"
+
+- name: "large"
+  description: "4 GB per node, 2 Shards, 1 Master + 1 Replica"
+  enforcedValues:
+    shards: 2
+    replicas: 1
+    workloadType: StatefulSet
+    resources:
+      limits:
+        cpu: 1
+        memory: 4Gi
+      requests:
+        cpu: 500m
+        memory: 2Gi
+    persistence:
+      enabled: true
+      size: 8Gi
+      storageClassName: ""
+      reclaimPolicy: Retain
+    exporter:
+      enabled: true
+  createDefaults: {}
+  allowCreatePathFields:
+  - "users"
+  - "config"
+  - "tls.enabled"
+  allowUpdatePathFields:
+  - "users"
+  - "config"
+  - "tls.enabled"
+
+- name: "xlarge"
+  description: "4 GB per node, 4 Shards, 1 Master + 1 Replica"
+  enforcedValues:
+    shards: 4
+    replicas: 1
+    workloadType: StatefulSet
+    resources:
+      limits:
+        cpu: 1
+        memory: 4Gi
+      requests:
+        cpu: 500m
+        memory: 2Gi
+    persistence:
+      enabled: true
+      size: 8Gi
+      storageClassName: ""
+      reclaimPolicy: Retain
+    exporter:
+      enabled: true
+  createDefaults: {}
+  allowCreatePathFields:
+  - "users"
+  - "config"
+  - "tls.enabled"
+  allowUpdatePathFields:
+  - "users"
+  - "config"
+  - "tls.enabled"
+
+- name: "2xlarge"
+  description: "8 GB per node, 4 Shards, 1 Master + 1 Replica"
+  enforcedValues:
+    shards: 4
+    replicas: 1
+    workloadType: StatefulSet
+    resources:
+      limits:
+        cpu: 2
+        memory: 8Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+    persistence:
+      enabled: true
+      size: 16Gi
       storageClassName: ""
       reclaimPolicy: Retain
     exporter:
