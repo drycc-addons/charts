@@ -1,0 +1,82 @@
+## OpenAPI v3 schema for XRD admission validation.
+## Only fields from `allowCreate` / `allowUpdate` belong here.
+replicas:
+  type: integer
+  minimum: 1
+  maximum: 7
+  default: 1
+image:
+  type: object
+  required: [repository, tag]
+  properties:
+    repository:
+      type: string
+      maxLength: 512
+    tag:
+      type: string
+      maxLength: 256
+command:
+  type: array
+  maxItems: 20
+  items:
+    type: string
+    maxLength: 1024
+args:
+  type: array
+  maxItems: 20
+  items:
+    type: string
+    maxLength: 1024
+env:
+  type: object
+  maxProperties: 50
+  additionalProperties:
+    type: string
+    maxLength: 8192
+ports:
+  type: array
+  maxItems: 10
+  items:
+    type: object
+    properties:
+      containerPort:
+        type: integer
+      name:
+        type: string
+        maxLength: 63
+      protocol:
+        type: string
+healthCheck:
+  type: object
+service:
+  type: object
+  properties:
+    ports:
+      type: array
+      maxItems: 10
+      items:
+        type: object
+        properties:
+          port:
+            type: integer
+          targetPort:
+            type: integer
+          name:
+            type: string
+            maxLength: 63
+          protocol:
+            type: string
+persistence:
+  type: object
+  properties:
+    enabled:
+      type: boolean
+    size:
+      type: string
+      maxLength: 64
+    storageClassName:
+      type: string
+      maxLength: 256
+    mountPath:
+      type: string
+      maxLength: 256

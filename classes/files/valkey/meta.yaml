@@ -1,0 +1,9 @@
+kind: Valkey
+plural: valkey
+description: "Valkey high-performance in-memory data structure store"
+
+registry: oci://registry.drycc.cc/drycc-addons/charts-testing
+chart: valkey
+chartVersion: "1.0.0"
+storageModel: bundle
+providerConfigRef: drycc-addons

@@ -1,16 +1,7 @@
-kind: Valkey
-plural: valkey
-description: "Valkey high-performance in-memory data structure store"
-
-registry: oci://registry.drycc.cc/drycc-addons/charts
-chart: valkey
-chartVersion: "1.0.0"
-providerConfigRef: drycc-addons
-
-plans:
 - name: "micro"
   description: "1 GB per node, Standalone"
-  enforcedValues:
+  defaults: {}
+  overrides:
     shards: 1
     replicas: 0
     workloadType: StatefulSet
@@ -25,22 +16,21 @@ plans:
       enabled: true
       size: 2Gi
       storageClassName: ""
-      reclaimPolicy: Retain
     exporter:
       enabled: true
-  createDefaults: {}
-  allowCreatePathFields:
+  allowCreate:
   - "users"
   - "config"
   - "tls.enabled"
-  allowUpdatePathFields:
+  allowUpdate:
   - "users"
   - "config"
   - "tls.enabled"
 
 - name: "small"
   description: "2 GB per node, 1 Master + 1 Replica"
-  enforcedValues:
+  defaults: {}
+  overrides:
     shards: 1
     replicas: 1
     workloadType: StatefulSet
@@ -55,22 +45,21 @@ plans:
       enabled: true
       size: 4Gi
       storageClassName: ""
-      reclaimPolicy: Retain
     exporter:
       enabled: true
-  createDefaults: {}
-  allowCreatePathFields:
+  allowCreate:
   - "users"
   - "config"
   - "tls.enabled"
-  allowUpdatePathFields:
+  allowUpdate:
   - "users"
   - "config"
   - "tls.enabled"
 
 - name: "medium"
   description: "4 GB per node, 1 Master + 1 Replica"
-  enforcedValues:
+  defaults: {}
+  overrides:
     shards: 1
     replicas: 1
     workloadType: StatefulSet
@@ -85,22 +74,21 @@ plans:
       enabled: true
       size: 8Gi
       storageClassName: ""
-      reclaimPolicy: Retain
     exporter:
       enabled: true
-  createDefaults: {}
-  allowCreatePathFields:
+  allowCreate:
   - "users"
   - "config"
   - "tls.enabled"
-  allowUpdatePathFields:
+  allowUpdate:
   - "users"
   - "config"
   - "tls.enabled"
 
 - name: "large"
   description: "4 GB per node, 2 Shards, 1 Master + 1 Replica"
-  enforcedValues:
+  defaults: {}
+  overrides:
     shards: 2
     replicas: 1
     workloadType: StatefulSet
@@ -115,22 +103,21 @@ plans:
       enabled: true
       size: 8Gi
       storageClassName: ""
-      reclaimPolicy: Retain
     exporter:
       enabled: true
-  createDefaults: {}
-  allowCreatePathFields:
+  allowCreate:
   - "users"
   - "config"
   - "tls.enabled"
-  allowUpdatePathFields:
+  allowUpdate:
   - "users"
   - "config"
   - "tls.enabled"
 
 - name: "xlarge"
   description: "4 GB per node, 4 Shards, 1 Master + 1 Replica"
-  enforcedValues:
+  defaults: {}
+  overrides:
     shards: 4
     replicas: 1
     workloadType: StatefulSet
@@ -145,22 +132,21 @@ plans:
       enabled: true
       size: 8Gi
       storageClassName: ""
-      reclaimPolicy: Retain
     exporter:
       enabled: true
-  createDefaults: {}
-  allowCreatePathFields:
+  allowCreate:
   - "users"
   - "config"
   - "tls.enabled"
-  allowUpdatePathFields:
+  allowUpdate:
   - "users"
   - "config"
   - "tls.enabled"
 
 - name: "2xlarge"
   description: "8 GB per node, 4 Shards, 1 Master + 1 Replica"
-  enforcedValues:
+  defaults: {}
+  overrides:
     shards: 4
     replicas: 1
     workloadType: StatefulSet
@@ -175,15 +161,13 @@ plans:
       enabled: true
       size: 16Gi
       storageClassName: ""
-      reclaimPolicy: Retain
     exporter:
       enabled: true
-  createDefaults: {}
-  allowCreatePathFields:
+  allowCreate:
   - "users"
   - "config"
   - "tls.enabled"
-  allowUpdatePathFields:
+  allowUpdate:
   - "users"
   - "config"
   - "tls.enabled"

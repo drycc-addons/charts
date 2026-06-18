@@ -1,0 +1,28 @@
+CHART NAME: {{ .Chart.Name }}
+CHART VERSION: {{ .Chart.Version }}
+APP VERSION: {{ .Chart.AppVersion }}
+
+A StatefulSet named "{{ include "generic.fullname" . }}" has been created in namespace "{{ .Release.Namespace }}".
+
+Workload: StatefulSet, {{ .Values.replicas }} replica(s)
+Image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+{{- if .Values.persistence.enabled }}
+Persistence: {{ .Values.persistence.size }}, mountPath {{ .Values.persistence.mountPath }}
+{{- else }}
+Persistence: disabled
+{{- end }}
+Service: {{ .Values.service.type }}, ports: {{ range $i, $p := .Values.service.ports }}{{ if $i }}, {{ end }}{{ $p.port }} -> {{ $p.targetPort }} ({{ $p.name }}){{ end }}
+
+Inspect the pods:
+
+  kubectl get pods --namespace {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+Inspect the StatefulSet:
+
+  kubectl get statefulset {{ include "generic.fullname" . }} --namespace {{ .Release.Namespace }}
+{{- if .Values.service.enabled }}
+
+Connect to the service:
+
+  kubectl run -i --tty --rm debug --image=busybox --restart=Never -- wget -qO- http://{{ include "generic.fullname" . }}.{{ .Release.Namespace }}.svc:{{ (index .Values.service.ports 0).port }}
+{{- end }}

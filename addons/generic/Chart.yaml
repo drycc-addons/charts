@@ -1,0 +1,14 @@
+annotations:
+  category: Application
+apiVersion: v2
+description: Generic application workload chart. This chart renders a native Kubernetes StatefulSet with optional Service and PVC resources. Suitable for deploying arbitrary container images with platform-enforced resource limits.
+keywords:
+  - generic
+  - application
+  - workload
+maintainers:
+  - email: dev@drycc.io
+    name: drycc
+name: generic
+version: "0.1.0"
+appVersion: "v0.1.0"

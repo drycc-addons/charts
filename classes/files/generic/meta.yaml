@@ -1,0 +1,10 @@
+kind: Generic
+plural: generic
+description: "Generic application workload — deploy any container image with platform-enforced resource limits and optional persistent storage"
+
+registry: oci://registry.drycc.cc/drycc-addons/charts-testing
+chart: generic
+chartVersion: "0.1.0"
+storageModel: custom
+multiplierFrom: "replicas"
+providerConfigRef: drycc-addons

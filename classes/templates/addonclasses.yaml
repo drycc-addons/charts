@@ -1,5 +1,6 @@
-{{- range $path, $_ := .Files.Glob "files/*.yaml" }}
-{{- $values := $.Files.Get $path | fromYaml }}
+{{- include "classes.iterate" (dict "root" . "body" "classes.addonclass") -}}
+{{- define "classes.addonclass" -}}
+{{- $values := .values -}}
 ---
 apiVersion: addons.drycc.cc/v1
 kind: AddonClass
@@ -14,21 +15,24 @@ metadata:
     helm.sh/hook-delete-policy: before-hook-creation
 spec:
   description: {{ $values.description | quote }}
-  displayName: {{ default $values.description $values.displayName | quote }}
+  storageModel: {{ default "bundle" $values.storageModel | quote }}
+  {{- if $values.multiplierFrom }}
+  multiplierFrom: {{ $values.multiplierFrom | quote }}
+  {{- end }}
   targetResource:
     apiVersion: addons.drycc.cc/v1
     kind: {{ $values.kind }}
   plans:
 {{- range $values.plans }}
     - name: {{ .name | quote }}
-      displayName: {{ default .description .displayName | quote }}
-      enforcedValues:
-{{ .enforcedValues | toYaml | indent 8 }}
-      createDefaults:
-{{ .createDefaults | toYaml | indent 8 }}
-      allowCreatePathFields:
-{{ .allowCreatePathFields | toYaml | indent 8 }}
-      allowUpdatePathFields:
-{{ .allowUpdatePathFields | toYaml | indent 8 }}
+      description: {{ .description | quote }}
+      defaults:
+{{ .defaults | toYaml | indent 8 }}
+      overrides:
+{{ .overrides | toYaml | indent 8 }}
+      allowCreate:
+{{ .allowCreate | toYaml | indent 8 }}
+      allowUpdate:
+{{ .allowUpdate | toYaml | indent 8 }}
 {{- end }}
-{{- end }}
+{{ end -}}

@@ -1,0 +1,78 @@
+## OpenAPI v3 schema for XRD admission validation.
+users:
+  type: array
+  maxItems: 20
+  items:
+    type: object
+    required: [name]
+    properties:
+      name:
+        type: string
+        minLength: 1
+        maxLength: 64
+      enabled:
+        type: boolean
+      nopass:
+        type: boolean
+      keys:
+        type: object
+        properties:
+          readWrite:
+            type: array
+            maxItems: 50
+            items:
+              type: string
+              maxLength: 512
+          readOnly:
+            type: array
+            maxItems: 50
+            items:
+              type: string
+              maxLength: 512
+          writeOnly:
+            type: array
+            maxItems: 50
+            items:
+              type: string
+              maxLength: 512
+      commands:
+        type: object
+        properties:
+          allow:
+            type: array
+            maxItems: 50
+            items:
+              type: string
+              maxLength: 128
+          deny:
+            type: array
+            maxItems: 50
+            items:
+              type: string
+              maxLength: 128
+      channels:
+        type: object
+        properties:
+          allow:
+            type: array
+            maxItems: 50
+            items:
+              type: string
+              maxLength: 512
+          deny:
+            type: array
+            maxItems: 50
+            items:
+              type: string
+              maxLength: 512
+config:
+  type: object
+  maxProperties: 50
+  additionalProperties:
+    type: string
+    maxLength: 4096
+tls:
+  type: object
+  properties:
+    enabled:
+      type: boolean

@@ -2,6 +2,85 @@
 
 Helm charts for the drycc addons platform. Two-layer data-driven model powered by Crossplane.
 
+## Architecture: Crossplane + Helm backends
+
+The platform is built on two cooperating backends: a **Crossplane control plane**
+(`classes/`) that defines the addon catalog and provisioning logic, and a **Helm
+rendering layer** (`addons/`) that produces the actual workload resources. Every
+addon requires both halves — the control plane to declaratively describe *how* an
+addon is provisioned, and the rendering layer to emit the concrete Kubernetes
+resource.
+
+### Crossplane control plane (`classes/`)
+
+Installed once per cluster via `helm install catalog ./classes`. This chart renders
+three Crossplane resource types per addon, all generated from data files in
+`classes/files/`:
+
+| Resource | Purpose |
+|----------|---------|
+| **XRD** (`CompositeResourceDefinition`) | Defines the composite kind (e.g. `Valkey`) and the `spec.parameters` schema. The XRD admission controller validates user input against this schema at creation time. |
+| **Composition** | Pipeline-mode Composition that maps the composite resource (XR) to a Crossplane `helm.m.crossplane.io/v1beta1 Release`. It patches `spec.defaults → spec.parameters → spec.overrides` into `spec.forProvider.values`, which become the addon chart's helm values. |
+| **AddonClass** (`addons.drycc.cc/v1`) | Platform-owned CR that advertises the addon kind, plans (`defaults`/`overrides`), and field whitelists (`allowCreate`/`allowUpdate`) to the PaaS API. |
+
+A fourth resource, the Helm `ClusterProviderConfig` (`drycc-addons`), is installed
+cluster-wide and uses `InjectedIdentity` so Crossplane can authenticate to the
+cluster when creating `Release` objects.
+
+**Value merge order** (lowest → highest priority):
+
+```
+spec.defaults   ← plan.defaults      (platform defaults, user-overridable)
+spec.parameters ← filtered user input (validated by schema.yaml)
+spec.overrides  ← plan.overrides     (platform-enforced, highest priority)
+                         │
+                         ▼  (Composition patches each into spec.forProvider.values)
+              helm Release.values  →  addon chart  →  renders one CR
+```
+
+### Helm rendering layer (`addons/`)
+
+Each `addons/<name>/` is a standalone Helm chart distributed via OCI registry and
+pulled on demand by the Crossplane Helm provider. The chart renders **exactly one
+custom resource** (e.g. a `ValkeyCluster` CR) — it contains no operator, no CRDs,
+and no controllers. Top-level `values.yaml` keys map 1:1 to the target CR's
+`.spec` fields.
+
+```
+Crossplane Composition
+      │  creates helm.m.crossplane.io/v1beta1 Release
+      ▼
+helm Release  ──pull──►  oci://registry.drycc.cc/charts/<name>:<version>
+      │                   (addon chart)
+      ▼
+helm template  ──renders──►  one <Kind> CR (e.g. ValkeyCluster)
+      │
+      ▼
+cluster-scoped operator reconciles the CR  (installed separately)
+```
+
+For non-operator addons (e.g. `generic`), the chart renders a native
+`StatefulSet` directly — no third-party operator involved.
+
+### How the two backends connect
+
+```
+classes/files/<name>/              addons/<name>/
+  meta.yaml    (kind, chart)         Chart.yaml
+  schema.yaml  (admission)            values.yaml      ← merged values land here
+  plans.yaml   (defaults/overrides)  templates/
+         │                               │
+         ▼                               ▼
+  XRD + Composition + AddonClass     renders one CR
+         │                               ▲
+         ▼                               │
+    user creates XR ──► Composition ──► helm Release (pulls chart, applies values)
+```
+
+The `classes/` chart and `addons/` chart are versioned independently. A bump to
+the addon chart (`chartVersion` in `meta.yaml`) only requires updating the classes
+declaration — no chart template changes needed.
+
 ## Structure
 
 ```
@@ -21,7 +100,7 @@ charts/
 │   │   └── providerconfig.yaml#     Helm ProviderConfig
 │   └── README.md
 │
-├── .AGENTS.md                 # Agent instructions for migrating new operators
+├── AGENTS.md                 # Agent instructions for migrating new operators
 ├── LICENSE
 ├── Makefile
 └── README.md
@@ -108,7 +187,7 @@ classes/files/<name>.yaml
        ├─→ Composition (helm Release → pulls addons/<name>/)
        └─→ AddonClass (addons.drycc.cc, plans + whitelists)
                         │
-                        │ spec.parameters → spec.forProvider.values
+                         │ spec.parameters → spec.forProvider.values
                         v
                addons/<name>/  →  renders one <Kind> CR
 ```
@@ -143,5 +222,5 @@ kubectl get crd | grep valkey.io
 
 ## Adding a new addon
 
-See `.AGENTS.md` for agent instructions on migrating a new operator-based addon.
+See `AGENTS.md` for agent instructions on migrating a new operator-based addon.
 Reference implementation: `addons/valkey/`.

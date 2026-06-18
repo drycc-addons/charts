@@ -1,0 +1,266 @@
+- name: "micro"
+  description: "250m CPU / 512Mi memory"
+  defaults:
+    imagePullPolicy: IfNotPresent
+    replicas: 1
+    persistence:
+      enabled: false
+  overrides:
+    resources:
+      limits:
+        cpu: 250m
+        memory: 512Mi
+      requests:
+        cpu: 125m
+        memory: 256Mi
+    service:
+      enabled: true
+      type: ClusterIP
+  allowCreate:
+  - "image.repository"
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"
+  - "persistence.enabled"
+  - "persistence.size"
+  - "persistence.storageClassName"
+  - "persistence.mountPath"
+  allowUpdate:
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"
+
+- name: "small"
+  description: "500m CPU / 1Gi memory"
+  defaults:
+    imagePullPolicy: IfNotPresent
+    replicas: 1
+    persistence:
+      enabled: true
+      size: 4Gi
+      storageClassName: ""
+      mountPath: /data
+  overrides:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+    service:
+      enabled: true
+      type: ClusterIP
+  allowCreate:
+  - "image.repository"
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"
+  - "persistence.enabled"
+  - "persistence.size"
+  - "persistence.storageClassName"
+  - "persistence.mountPath"
+  allowUpdate:
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"
+
+- name: "medium"
+  description: "1 CPU / 2Gi memory"
+  defaults:
+    imagePullPolicy: IfNotPresent
+    replicas: 2
+    persistence:
+      enabled: true
+      size: 8Gi
+      storageClassName: ""
+      mountPath: /data
+  overrides:
+    resources:
+      limits:
+        cpu: 1
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
+    service:
+      enabled: true
+      type: ClusterIP
+  allowCreate:
+  - "image.repository"
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"
+  - "persistence.enabled"
+  - "persistence.size"
+  - "persistence.storageClassName"
+  - "persistence.mountPath"
+  allowUpdate:
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"
+
+- name: "large"
+  description: "2 CPU / 4Gi memory"
+  defaults:
+    imagePullPolicy: IfNotPresent
+    replicas: 3
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClassName: ""
+      mountPath: /data
+  overrides:
+    resources:
+      limits:
+        cpu: 2
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 2Gi
+    service:
+      enabled: true
+      type: ClusterIP
+  allowCreate:
+  - "image.repository"
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"
+  - "persistence.enabled"
+  - "persistence.size"
+  - "persistence.storageClassName"
+  - "persistence.mountPath"
+  allowUpdate:
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"
+
+- name: "xlarge"
+  description: "4 CPU / 8Gi memory"
+  defaults:
+    imagePullPolicy: IfNotPresent
+    replicas: 5
+    persistence:
+      enabled: true
+      size: 50Gi
+      storageClassName: ""
+      mountPath: /data
+  overrides:
+    resources:
+      limits:
+        cpu: 4
+        memory: 8Gi
+      requests:
+        cpu: 2
+        memory: 4Gi
+    service:
+      enabled: true
+      type: ClusterIP
+  allowCreate:
+  - "image.repository"
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"
+  - "persistence.enabled"
+  - "persistence.size"
+  - "persistence.storageClassName"
+  - "persistence.mountPath"
+  allowUpdate:
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"
+
+- name: "2xlarge"
+  description: "8 CPU / 16Gi memory"
+  defaults:
+    imagePullPolicy: IfNotPresent
+    replicas: 5
+    persistence:
+      enabled: true
+      size: 100Gi
+      storageClassName: ""
+      mountPath: /data
+  overrides:
+    resources:
+      limits:
+        cpu: 8
+        memory: 16Gi
+      requests:
+        cpu: 4
+        memory: 8Gi
+    service:
+      enabled: true
+      type: ClusterIP
+  allowCreate:
+  - "image.repository"
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"
+  - "persistence.enabled"
+  - "persistence.size"
+  - "persistence.storageClassName"
+  - "persistence.mountPath"
+  allowUpdate:
+  - "image.tag"
+  - "command"
+  - "args"
+  - "env"
+  - "ports"
+  - "healthCheck"
+  - "service.ports"
+  - "replicas"

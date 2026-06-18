@@ -1,12 +1,15 @@
-{{- range $path, $_ := .Files.Glob "files/*.yaml" }}
-{{- $values := $.Files.Get $path | fromYaml }}
+{{- include "classes.iterate" (dict "root" . "body" "classes.composition") -}}
+
+{{- define "classes.composition" -}}
+{{- $values := .values -}}
+{{- $addonName := .addonName -}}
 ---
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: {{ $path | base | trimSuffix ".yaml" }}.addons.drycc.cc
+  name: {{ $addonName }}.addons.drycc.cc
   labels:
-    app.kubernetes.io/name: {{ $path | base | trimSuffix ".yaml" }}
+    app.kubernetes.io/name: {{ $addonName }}
     app.kubernetes.io/component: crossplane-composition
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
@@ -53,8 +56,20 @@ spec:
                 fromFieldPath: metadata.labels
                 toFieldPath: metadata.labels
               - type: FromCompositeFieldPath
+                fromFieldPath: spec.defaults
+                toFieldPath: spec.forProvider.values
+                policy:
+                  toFieldPath: ForceMergeObjects
+              - type: FromCompositeFieldPath
                 fromFieldPath: spec.parameters
                 toFieldPath: spec.forProvider.values
+                policy:
+                  toFieldPath: ForceMergeObjects
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.overrides
+                toFieldPath: spec.forProvider.values
+                policy:
+                  toFieldPath: ForceMergeObjects
               - type: ToCompositeFieldPath
                 fromFieldPath: metadata.name
                 toFieldPath: status.connectionSecretName
@@ -63,4 +78,4 @@ spec:
                     string:
                       type: Format
                       fmt: "%s-connection"
-{{- end }}
+{{ end -}}

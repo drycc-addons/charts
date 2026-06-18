@@ -20,13 +20,17 @@ spec:
           properties:
             spec:
               type: object
-              required: [displayName, targetResource, plans]
+              required: [description, targetResource, plans]
               properties:
                 description:
                   type: string
                   minLength: 1
                   maxLength: 512
-                displayName:
+                storageModel:
+                  type: string
+                  enum: [custom, bundle]
+                  default: bundle
+                multiplierFrom:
                   type: string
                   minLength: 1
                   maxLength: 128
@@ -50,32 +54,32 @@ spec:
                     type: object
                     required:
                       - name
-                      - displayName
-                      - enforcedValues
-                      - createDefaults
-                      - allowCreatePathFields
-                      - allowUpdatePathFields
+                      - description
+                      - defaults
+                      - overrides
+                      - allowCreate
+                      - allowUpdate
                     properties:
                       name:
                         type: string
                         minLength: 1
                         maxLength: 64
-                      displayName:
+                      description:
                         type: string
                         minLength: 1
                         maxLength: 128
-                      enforcedValues:
+                      defaults:
                         type: object
                         x-kubernetes-preserve-unknown-fields: true
-                      createDefaults:
+                      overrides:
                         type: object
                         x-kubernetes-preserve-unknown-fields: true
-                      allowCreatePathFields:
+                      allowCreate:
                         type: array
                         items:
                           type: string
                           minLength: 1
-                      allowUpdatePathFields:
+                      allowUpdate:
                         type: array
                         items:
                           type: string

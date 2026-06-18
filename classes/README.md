@@ -42,9 +42,11 @@ Common fields include:
 - `chart` - Helm chart name
 - `chartVersion` - chart version
 - `providerConfigRef` - Crossplane Helm provider config name
-- `displayName` - addon class display name
+- `description` - addon class description
 - `kind` / `plural` - composite kind naming
-- `plans` - class plans with enforcedValues and createDefaults
+- `storageModel` - billing storage model (custom, bundle)
+- `multiplierFrom` - billing multiplier field path (optional, e.g. "replicas")
+- `plans` - class plans with defaults, overrides, allowCreate, allowUpdate
 
 ## Deployment Order
 

@@ -1,0 +1,124 @@
+## Generic addon instance chart values.
+##
+## This chart renders a native Kubernetes StatefulSet with optional
+## Service and PVC resources. No operator is required. When provisioned through
+## the drycc addons control plane (Crossplane), these values are supplied via
+## spec.parameters and merged with the plan overrides.
+
+## @param imagePullPolicy Image pull policy (Always, IfNotPresent, Never)
+##
+imagePullPolicy: IfNotPresent
+
+## Container image specification.
+## @param image.repository Container image repository
+## @param image.tag Container image tag
+##
+image:
+  repository: ""
+  tag: ""
+
+## @param replicas Number of replicas.
+##
+replicas: 1
+
+## @param command Override the container entrypoint
+## Example:
+##   command: ["sh", "-c", "echo hello"]
+##
+command: []
+
+## @param args Override the container arguments
+## Example:
+##   args: ["--config", "/etc/app/config.yaml"]
+##
+args: []
+
+## @param env Environment variables for the container
+## Example:
+##   env:
+##     DATABASE_URL: "postgres://..."
+##     LOG_LEVEL: "info"
+##
+env: {}
+
+## @param ports Container ports to expose
+## Example:
+##   ports:
+##     - containerPort: 8080
+##       name: http
+##       protocol: TCP
+##
+ports: []
+
+## Health check configuration.
+## @param healthCheck.liveness Liveness probe (httpGet, tcpSocket, exec)
+## @param healthCheck.readiness Readiness probe (httpGet, tcpSocket, exec)
+## Example:
+##   healthCheck:
+##     liveness:
+##       httpGet:
+##         path: /healthz
+##         port: 8080
+##       initialDelaySeconds: 10
+##       periodSeconds: 10
+##     readiness:
+##       httpGet:
+##         path: /ready
+##         port: 8080
+##       initialDelaySeconds: 5
+##       periodSeconds: 5
+##
+healthCheck: {}
+
+## @param resources Resource requirements for the container
+## Example:
+##   resources:
+##     limits:
+##       cpu: 500m
+##       memory: 512Mi
+##     requests:
+##       cpu: 250m
+##       memory: 256Mi
+##
+resources: {}
+
+## Persistence for durable storage.
+## Once set it cannot be removed; size may only be expanded; storageClassName is immutable.
+## @param persistence.enabled Whether to create a volumeClaimTemplate
+## @param persistence.size Requested PVC size
+## @param persistence.storageClassName StorageClass for the PVC (empty uses the cluster default)
+## @param persistence.mountPath Path inside the container where the volume is mounted
+##
+persistence:
+  enabled: false
+  size: 1Gi
+  storageClassName: ""
+  mountPath: /data
+
+## Service configuration.
+## @param service.enabled Whether to create a Service
+## @param service.type Service type (ClusterIP, NodePort, LoadBalancer)
+## @param service.ports Service ports
+## Example:
+##   service.ports:
+##     - name: http
+##       port: 80
+##       targetPort: 8080
+##       protocol: TCP
+##     - name: https
+##       port: 443
+##       targetPort: 8443
+##       protocol: TCP
+##
+service:
+  enabled: true
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: TCP
+
+## @param nodeSelector NodeSelector to apply to the pods
+##
+nodeSelector: {}

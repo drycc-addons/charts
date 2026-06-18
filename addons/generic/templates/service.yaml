@@ -1,0 +1,21 @@
+{{- if and .Values.service.enabled .Values.service.ports }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "generic.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "generic.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    {{- range .Values.service.ports }}
+    - port: {{ .port }}
+      targetPort: {{ .targetPort }}
+      protocol: {{ .protocol | default "TCP" }}
+      {{- /* K8s auto-assigns an ephemeral port when nodePort is omitted */}}
+      name: {{ .name }}
+    {{- end }}
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

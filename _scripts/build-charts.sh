@@ -16,10 +16,13 @@ package_chart() {
 
 sync_chart_versions() {
   [ -z "${VERSION:-}" ] && return
-  for f in "${ROOT_DIR}"/classes/files/*.yaml; do
+  for f in "${ROOT_DIR}"/classes/files/*/meta.yaml; do
     [ -f "$f" ] || continue
-    sed -i "s/chartVersion: \".*\"/chartVersion: \"${VERSION}\"/" "$f"
-    echo "    -> synced ${f#${ROOT_DIR}/} chartVersion to ${VERSION}"
+    sed -i \
+      -e "s/chartVersion: \".*\"/chartVersion: \"${VERSION}\"/" \
+      -e "s#registry: oci://\(.*\)/charts-testing#registry: oci://\1/charts#" \
+      "$f"
+    echo "    -> synced ${f#${ROOT_DIR}/} chartVersion=${VERSION} registry=charts"
   done
 }
 

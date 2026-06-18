@@ -8,7 +8,7 @@
 ##
 ## Top-level keys below map 1:1 to ValkeyCluster .spec.* fields. When provisioned
 ## through the drycc addons control plane (Crossplane), these values are supplied
-## via spec.parameters and merged with the plan enforcedValues.
+## via spec.parameters and merged with the plan overrides.
 
 ## @param imagePullPolicy Image pull policy (Always, IfNotPresent, Never)
 ##
@@ -37,13 +37,11 @@ config: {}
 ## @param persistence.enabled Whether to render the persistence block on the ValkeyCluster
 ## @param persistence.size Requested PVC size
 ## @param persistence.storageClassName StorageClass for the PVC (empty uses the cluster default)
-## @param persistence.reclaimPolicy Whether the managed PVC is retained or deleted when the node is deleted. One of: Retain, Delete.
 ##
 persistence:
   enabled: true
   size: 1Gi
   storageClassName: ""
-  reclaimPolicy: Retain
 
 ## @param resources Resource requirements for the Valkey container in each pod
 ## Example:
