@@ -19,6 +19,10 @@ spec:
   {{- if $values.multiplierFrom }}
   multiplierFrom: {{ $values.multiplierFrom | quote }}
   {{- end }}
+  {{- if $values.visiblePaths }}
+  visiblePaths:
+{{ $values.visiblePaths | toYaml | indent 4 }}
+  {{- end }}
   targetResource:
     apiVersion: addons.drycc.cc/v1
     kind: {{ $values.kind }}

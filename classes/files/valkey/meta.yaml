@@ -6,4 +6,9 @@ registry: oci://registry.drycc.cc/drycc-addons/charts-testing
 chart: valkey
 chartVersion: "1.0.0"
 storageModel: bundle
+visiblePaths:
+- "name"
+- "description"
+- "allowCreate"
+- "allowUpdate"
 providerConfigRef: drycc-addons

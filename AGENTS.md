@@ -56,7 +56,7 @@ addons/<name>/
 
 ```
 classes/files/<name>/
-  meta.yaml             # kind, plural, description, registry, chart, chartVersion, providerConfigRef, storageModel, multiplierFrom
+  meta.yaml             # kind, plural, description, registry, chart, chartVersion, providerConfigRef, storageModel, multiplierFrom, visiblePaths
   schema.yaml           # OpenAPI v3 schema for XRD admission validation (only allowPathFields)
   plans.yaml            # list of plan definitions
 ```
@@ -179,6 +179,32 @@ plan `overrides` first (highest priority), then user `parameters`, then plan
 |---|---|---|
 | `generic` | `replicas` | User-defined replica count (1-7) |
 | `valkey` | *(absent)* | `1` (plan-enforced topology, billed by plan) |
+
+### visiblePaths field
+
+Set in `meta.yaml`, rendered into the AddonClass CR spec. The platform reads
+this from the AddonClass to decide which plan-level fields are visible to end
+users when listing/inspecting addon plans. Internal fields (`defaults`,
+`overrides`) are hidden by omission.
+
+```yaml
+visiblePaths:
+  - "name"           # plan name (e.g. "small")
+  - "description"    # human-readable plan description
+  - "allowCreate"    # fields users may set at creation
+  - "allowUpdate"    # fields users may modify after creation
+```
+
+| Value | Plan field | Visible to users? |
+|---|---|---|
+| `name` | plan name | Yes |
+| `description` | plan description | Yes |
+| `allowCreate` | creatable field paths | Yes |
+| `allowUpdate` | updatable field paths | Yes |
+| `defaults` | platform defaults | No (internal) |
+| `overrides` | platform-enforced values | No (internal) |
+
+When absent, the platform falls back to its default visible set.
 
 ## Existing addons
 

@@ -34,6 +34,11 @@ spec:
                   type: string
                   minLength: 1
                   maxLength: 128
+                visiblePaths:
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
                 targetResource:
                   type: object
                   required: [apiVersion, kind]

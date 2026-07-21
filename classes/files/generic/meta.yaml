@@ -6,5 +6,10 @@ registry: oci://registry.drycc.cc/drycc-addons/charts-testing
 chart: generic
 chartVersion: "0.1.0"
 storageModel: custom
+visiblePaths:
+- "name"
+- "description"
+- "allowCreate"
+- "allowUpdate"
 multiplierFrom: "replicas"
 providerConfigRef: drycc-addons
